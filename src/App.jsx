@@ -1509,6 +1509,10 @@ export default function App() {
 
     for (const file of files) {
       try {
+        const fileRocYearMatch = file.name.match(/(\d{2,3})年(\d{1,2})月/);
+        const fileRocYear = fileRocYearMatch ? parseInt(fileRocYearMatch[1], 10) + 1911 : null;
+        const fileMonth = fileRocYearMatch ? parseInt(fileRocYearMatch[2], 10) : null;
+
         const arrayBuffer = await file.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -1523,7 +1527,14 @@ export default function App() {
                    hasValidData = true;
                    const dateRaw = String(row['進貨日']).trim();
                    let dateStr = dateRaw;
-                   if (!isNaN(dateRaw) && Number(dateRaw) > 10000) { 
+                   const cnDateMatch = dateRaw.match(/^(\d{1,2})月(\d{1,2})日$/);
+                   if (cnDateMatch) {
+                     const rowMonth = parseInt(cnDateMatch[1], 10);
+                     const rowDay = parseInt(cnDateMatch[2], 10);
+                     const baseYear = fileRocYear || new Date().getFullYear();
+                     const year = (fileMonth !== null && rowMonth > fileMonth) ? baseYear - 1 : baseYear;
+                     dateStr = `${year}-${String(rowMonth).padStart(2,'0')}-${String(rowDay).padStart(2,'0')}`;
+                   } else if (!isNaN(dateRaw) && Number(dateRaw) > 10000) {
                      const d = XLSX.SSF.parse_date_code(Number(dateRaw));
                      dateStr = `${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
                    }
