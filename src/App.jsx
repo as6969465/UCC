@@ -568,8 +568,10 @@ const PalletStatsView = () => {
       if(item.date >= startDate && item.date <= endDate) {
           whSet.add(item.wh);
           if (!result[item.date]) result[item.date] = { total: 0 };
-          if (!result[item.date][item.wh]) result[item.date][item.wh] = 0;
-          result[item.date][item.wh] += item.stock;
+          if (!result[item.date][item.wh]) result[item.date][item.wh] = { qty: 0, pallets: 0 };
+          result[item.date][item.wh].qty += item.stock;
+          // 與結帳報表一致：每筆（品項+批號）各自進位後再加總
+          result[item.date][item.wh].pallets += Math.ceil(item.stock / pcsPerPallet);
       }
     });
 
@@ -578,8 +580,8 @@ const PalletStatsView = () => {
       let totalPallet = 0;
       const rowData = { date };
       warehouses.forEach(wh => {
-        const qty = result[date][wh] || 0;
-        const pallets = Math.ceil(qty / pcsPerPallet);
+        const qty = result[date][wh]?.qty || 0;
+        const pallets = result[date][wh]?.pallets || 0;
         rowData[wh] = { qty, pallets };
         totalPallet += pallets;
       });
