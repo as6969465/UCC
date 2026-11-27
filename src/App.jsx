@@ -576,7 +576,7 @@ const PalletStatsView = () => {
     });
 
     const warehouses = [...whSet].sort();
-    const tableData = Object.keys(result).sort().map(date => {
+    const tableData = Object.keys(result).sort().reverse().map(date => {
       let totalPallet = 0;
       const rowData = { date };
       warehouses.forEach(wh => {
@@ -1234,7 +1234,7 @@ const BillingView = () => {
         </button>
       </div>
 
-      <div className={`bg-white rounded-b-xl rounded-tr-xl shadow-sm border border-t-0 border-gray-200 overflow-hidden transition-all duration-500 ${isGreyedOut ? 'grayscale opacity-75 pointer-events-none' : ''}`}>
+      <div className={`bg-white rounded-b-xl rounded-tr-xl shadow-sm border border-t-0 border-gray-200 overflow-hidden transition-all duration-500 ${isGreyedOut ? 'grayscale opacity-75' : ''}`}>
         {billingSubTab === 'storage' ? (
            <div className="overflow-x-auto overflow-y-auto max-h-[500px]">
              <table className="min-w-full divide-y divide-gray-200 text-center table-fixed">
