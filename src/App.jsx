@@ -576,7 +576,7 @@ const PalletStatsView = () => {
     });
 
     const warehouses = [...whSet].sort();
-    const tableData = Object.keys(result).sort().map(date => {
+    const tableData = Object.keys(result).sort().reverse().map(date => {
       let totalPallet = 0;
       const rowData = { date };
       warehouses.forEach(wh => {
