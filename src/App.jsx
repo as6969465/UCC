@@ -1047,7 +1047,8 @@ const BillingView = () => {
       }
     });
     
-    return Object.values(result).map(day => ({ ...day, cost: Math.round(day.pallets * costPerPallet) })).sort((a, b) => a.date.localeCompare(b.date));
+    // 合計金額＝各倉金額（各自四捨五入）加總，確保明細加總與合計一致
+    return Object.values(result).map(day => ({ ...day, cost: Object.values(day.details).reduce((sum, units) => sum + Math.round(units * costPerPallet), 0) })).sort((a, b) => a.date.localeCompare(b.date));
   }, [data, startDate, endDate, pcsPerPallet, costPerPallet, availableDates]);
 
   const receivingFiltered = useMemo(() => {
